@@ -1,5 +1,12 @@
 # AIrSplitter: Fixed-Wing Autonomous Systems Engineering Portfolio
 
+# Team Roles
+*   **Lead Systems Engineer:** Orchestrating tasks, routing tasks to small integrated product team (IPT)
+*   **Avionics Engineer:** FC, ESC, power, wiring harness
+*   **Structures Engineer:** airframe design, CG, foam fabrication
+*   **GNC Engineer:** flight modes, ArduPlane parameters, autonomy logic
+*   **Edge Computing Engineer:** RPi Zero 2W software, MAVLink integration
+
 ## Project Overview
 AIrSplitter is a professional-grade systems engineering project designed to validate autonomous fixed-wing flight control and edge-computing payloads. The platform is built entirely from scratch utilizing custom-machined white foam board structures, executing industry-standard aerospace development lifecycles. This repository serves as a technical engineering portfolio demonstrating the rigorous integration of hardware, low-level flight firmware, and high-level edge application logic.
 
