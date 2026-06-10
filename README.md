@@ -1,4 +1,4 @@
-# AIrSplitter: Fixed-Wing Autonomous Systems Engineering Portfolio
+# AirSplitter: Fixed-Wing Autonomous Systems Engineering Portfolio
 
 # Team Roles
 *   **Lead Systems Engineer:** Orchestrating tasks, routing tasks to small integrated product team (IPT)
@@ -58,6 +58,5 @@ This project repository explicitly rejects unorganized folder structures in favo
 
 ---
 
-## About the Engineer
-I am a full-time Industrial Engineer currently working within Fortune 500 manufacturing operations. My technical focus is centered on translating data-driven optimization paradigms into the aerospace and defense sector, specializing in the convergence of core Systems Engineering principles and Edge Computing software development.
+![AirSplitter Systems Context Diagram](docs/02_Architecture/System_Context_Diagram.png)
 
