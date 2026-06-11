@@ -1,0 +1,23 @@
+# 2.1 Component-to-Subsystem Mapping Matrix
+
+This architectural control document explicitly allocates every physical Bill of Materials (BOM) item and structural component to its respective functional aircraft subsystem.
+
+| Component / Airframe Part | Manufacturer / Model / Material | Allocated Subsystem | Primary Functional Role Within Subsystem |
+| :--- | :--- | :--- | :--- |
+| **Brushless Motor** | Cobra C-2814/8 (Kv=1850) | Propulsion (PROP) | Converts electrical energy into kinetic rotational energy. |
+| **Propeller** | Optimized Flight Propeller | Propulsion (PROP) | Translates rotational torque into aerodynamic kinetic thrust. |
+| **Electronic Speed Controller** | Cobra 60A FPV Wing ESC | Propulsion / Power | Modulates three-phase motor current; steps down voltage via 6A BEC. |
+| **LiPo Battery** | Zeee 3S 3200mAh 11.1V 50C | Power Distribution (PWR) | Master chemical energy reservoir for the complete system bus. |
+| **Power Switch & Wiring** | Current On-Off XT60 / 12AWG | Power Distribution (PWR) | Master physical circuit breaker and high-current power distribution lines. |
+| **Flight Controller** | Mateksys F405-WING-V2 | Guidance, Nav, & Control (GNC) | Embedded autopilot core; runs IMU sensor loop configurations. |
+| **GNSS & Compass Module** | Matek M10Q-5883 | Guidance, Nav, & Control (GNC) | Generates global 3D coordinate tracking and true magnetic heading. |
+| **Radio Receiver** | RadioMaster RP3 ELRS 2.4GHz | Communication (COMMS) | Receives uplink pilot control pulses; transmits downlink telemetry back. |
+| **Digital Servos** | TowerPro MG92B | Actuation (ACT) | Electronically drives the physical mechanical linkages to control surfaces. |
+| **Ailerons** | White Foam Board | Actuation / Aerostructures | Deflects air asymmetrically to execute aerodynamic roll control. |
+| **Elevator** | White Foam Board | Actuation / Aerostructures | Deflects air symmetrically to execute aerodynamic pitch control. |
+| **Rudder** | White Foam Board | Actuation / Aerostructures | Deflects air vertically to execute aerodynamic yaw control. |
+| **Wings** | White Foam Board / Primary Spar | Aerostructures (AERO) | Generates aerodynamic lift forces and provides lateral stabilization. |
+| **Fuselage** | Balsa Wood | Aerostructures (AERO) | Central structural aerodynamic fairing; protects internal electronics payload. |
+| **Wheels** | Landing Gear Assembly | Aerostructures (AERO) | Absorbs kinetic impact loading during takeoff and recovery sequences. |
+| **Edge Companion Computer** | Raspberry Pi Zero 2 W | Mission Payload (PAYLOAD) | Executes local computer vision scripts and handles high-level sorting. |
+| **Servo Wire Extensions** | 3-pin Servo Cables | Wiring Interconnect (BUS) | Conducts low-voltage PWM signals and 5V power to localized actuators. |
