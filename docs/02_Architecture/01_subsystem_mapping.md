@@ -26,6 +26,7 @@ This architectural control document explicitly allocates every physical Bill of 
 ## 2.2. Primary Downlink Node (5.8GHz RF Architecture)
 Following a trade study evaluating local environmental interference (wooded terrain) and computational overhead on the Raspberry Pi Zero 2 W, a dedicated digital 5.8GHz RF link has been selected.
 
+```mermaid
 graph TD
     Battery[Main LiPo Battery] -->|Raw Voltage VCC| Cobra_ESC[Cobra 60A ESC]
     Cobra_ESC -->|VCC Power Bus| Matek_FC[Mateksys F405-WING-V2 FC]
@@ -40,6 +41,8 @@ graph TD
     RF_Tx -.->|Wireless 5.8GHz RF| GCS_Rx[Walksnail Avatar VRX Box]
     GCS_Rx -->|HDMI Signal Cable| HDMI_Cap[UVC Capture Card Dongle]
     HDMI_Cap -->|USB Bus Node| GCS_Laptop[Ground Control Laptop]
+
+```
 
 ## 2. Component Budgetary Constraints
 * **Pi Computational Load:** Independent ASIC video encoding on Air Unit ensures ~0% CPU strain on Pi Zero for video transmission.
