@@ -1,0 +1,148 @@
+# ConOps: Systems Overview and Project Objectives
+
+## 1.1 Mission Statement
+The primary mission of the AirSplitter Unmanned Aerial Vehicle (AV-01) is to execute autonomous transit to a designated area of interest, perform real-time onboard object detection via an integrated edge-compute computer vision payload, and securely downlink target alert telemetry to the ground gateway. The system must subsequently execute a safe return-to-base (RTB) autonomous flight profile and recovery sequence while operating strictly within predefined environmental, aerodynamic, and regulatory constraints.
+
+## 1.2 Systems Performance and Verification Objectives
+1. Systems Engineering and Airframe Constriants
+*   **Objective:** Restrict the fully integrated aircraft Max Takeoff Weight (MTOW) to ≤ 3.0 lbs (1.36 kg) with the center of gravity (CoG) maintained within ± 5mm of the calculated aerodynamic mean aerodynamic chord (MAC) chord line.
+*   **Verification Method:** Physical mass-properties inspection and weight-and-balance bench testing.
+
+1. Aerostructure and Fabrication
+*   **Objective:** Achieve an airframe manufacturing dimensional tolerance of ≤ ±2.0 mm across the 4.0-foot wingspan, ensuring exact symmetry between the left and right wing profiles to minimize induced aerodynamic roll trim requirements during initial flight testing.
+*   **Verification Method:** Caliper measurements and chord-line alignment matrix mapping against the baseline SolidWorks CAD model prior to final assembly.
+
+1. Avionics & Power Management
+*   **Objective:** Achieve a continuous safe operational flight endurance of ≥ 15 minutes utilizing the Zeee 3S 3200mAh LiPo battery, while ensuring the Cobra 60A ESC auxiliary 6A BEC maintains a stable 5.0V (± 0.1V) rail voltage to prevent power starvation on the flight controller and servos.
+*   **Verification Method:** Ground-bench throttle step-response testing and iNav battery telemetry logs.
+
+1. Guidance, Navigation, and Control (GNC)
+*   **Objectice:** Program the Mateksys F405-WING-V2 firmware to maintain autonomous waypoint cruise navigation tracks within a maximum spatial cross-track error radius of ≤ 3.0 meters under steady-state ambient wind conditions up to 10 knots.
+*   **Verification Method:** Analysis of post-flight iNav blackbox telemetry flight path tracks.
+
+1. RF Telemetry & Link Reliability
+*   **Objective:** Maintain an uninterrupted 2.4GHz ExpressLRS control link margin with a Received Signal Strength Indicator (RSSI) of ≥ -100 dBm and a packet rate of 100Hz at a maximum operational line-of-sight (LOS) radius of 0.5 miles (0.8 km) from the RadioMaster TX16S.
+*   **Verification Method:** Real-time downlink telemetry tracking and post-flight link-quality data audits.
+
+1. Edge Computing & Computer Vision Payload
+*   **Objective:** Execute custom object-detection convolutional neural network (CNN) inference models locally on the Raspberry Pi Zero 2 W at a processing latency of ≤ 150 milliseconds per frame, while maintaining a serial UART telemetry ingestion rate of 115200 baud from the flight controller.
+*   **Verification Method:** System time-stamp logging inside the embedded Python runtime environment.
+
+## 1.3 Stakeholder Registry & Role Definitions
+
+| Stakeholder Role | Primary Responsibility | Core System Interaction |
+| :--- | :--- | :--- |
+| **Systems Engineering (SE) Lead** | System lifecycle management, requirements verification, and interface control documentation. | Audits configuration changes, manages the Git/GitHub pipeline, and signs off on pre-flight verification readiness. |
+| **Pilot-in-Command (PIC)** | Safe tactical execution of the flight profile, manual override authority, and airspace safety compliance. | Operates the **RadioMaster TX16S**, monitors low-level iNav GNC telemetry, and executes manual takeoff and recovery loops. |
+| **Payload & Software Engineer** | Edge-compute pipeline performance, algorithm deployment, and localized network communication. | Manages the **Raspberry Pi Zero 2 W** OS, configures the computer vision models, and verifies the serial UART data stream. |
+| **Regulatory Authority (FAA / Local)** | Airspace safety compliance, operational limitations verification, and remote identification enforcement. | Enforces **FAA Part 107** regulatory boundaries (e.g., maintaining flight under 400 ft AGL and inside visual line-of-sight). |
+| **Technical Reviewer / Recruiter** | Evaluation of engineering discipline, systems-level documentation rigor, and software architecture scaling. | Audits the repository file hierarchy, analyzes Blackbox flight data logs, and reviews the Kanban project lifecycle tracking. |
+
+## 1.4 Operational Metrics (KPPs & KSAs)
+
+The following parameters define the foundational engineering thresholds required to validate the AirSplitter platform as a successful system. 
+
+### Key Performance Parameters (KPPs)
+KPPs represent the critical capabilities that the system must achieve to fulfill its core mission profile. Failure to meet a Threshold value constitutes a system non-compliance event.
+
+| KPP ID | Capability Parameter | Threshold (Minimum) | Objective (Target) | Portfolio Justification |
+| :--- | :--- | :--- | :--- | :--- |
+| **KPP-01** | **Autonomous Waypoint Navigation** | 100% of cruise flight path must be executed via autopilot when the autonomous mode is selected. | Fully autonomous takeoff, waypoint navigation loop, and landing sequence. | Demonstrates robust closed-loop Guidance, Navigation, and Control (GNC) without pilot intervention. |
+| **KPP-02** | **Onboard Edge Detection** | Real-time computer vision inference must execute locally on the aircraft. | Automated detection parsing with target bounding-box generation embedded on edge logs. | Validates true edge compute processing independence from ground or cloud relay networks. |
+| **KPP-03** | **Fail-Safe Recovery Loop** | Autopilot must trigger an automated Return-to-Base (RTB) profile upon loss of RF signal. | Safe physical recovery of the aircraft within a 10-meter radius of the launch point. | Ensures high-reliability flight safety and compliance with airspace operational standards. |
+
+### Key System Attributes (KSAs)
+KSAs are critical performance attributes used to optimize the aircraft's architecture. These values represent highly desirable targets that can be traded off to balance cost, weight, or complexity constraints.
+
+| KSA ID | Attribute Parameter | Threshold (Minimum) | Objective (Target) | Engineering Tradespace |
+| :--- | :--- | :--- | :--- | :--- |
+| **KSA-01** | **Airframe Takeoff Mass** | ≤ 3.0 lbs (1.36 kg) | ≤ 2.5 lbs (1.13 kg) | Directly impacts aerodynamic power consumption, stall speed margins, and motor thermal limits. |
+| **KSA-02** | **Target Detection Latency** | ≤ 250 milliseconds per frame | ≤ 100 milliseconds per frame | Governs maximum allowable forward airspeed to prevent the aircraft from overflying a target before processing completes. |
+| **KSA-03** | **Continuous Flight Endurance** | ≥ 10 minutes | ≥ 20 minutes | Balance point between battery capacity (mass) and effective structural payload capacity. |
+| **KSA-04** | **Data Link Telemetry Baud** | 57600 baud stable serial connection | 115200 baud error-free serial connection | Constraints defined by UART physical line length and the MAVLink packet throughput requirements between the FC and the Raspberry Pi. |
+
+## 1.5 Major System Capabilities & Operational Flight Modes
+
+The AirSplitter platform is architected with multi-tiered operational flight modes. These capabilities provide a progressive degradation path from full compute autonomy down to manual mechanical overrides, ensuring system survivability and mission flexibility.
+
+### 1. Manual Flight Mode (Direct Control)
+*   **System State:** Autopilot stabilization loops are completely bypassed. Raw pilot inputs from the **RadioMaster TX16S** are translated directly into pulse-width modulation (PWM) servo deflections.
+*   **Engineering Objective:** Serves as the ultimate hardware fail-safe mechanism, allowing the Pilot-in-Command (PIC) to physically override the aircraft during emergency landing scenarios or sudden aerodynamic anomalies.
+
+### 2. Stabilized Flight Mode (Attitude Augmentation)
+*   **System State:** The **Mateksys F405-WING-V2** onboard Inertial Measurement Unit (IMU) active loops manage internal stabilization. The flight controller automatically commands control surfaces to maintain pitch and roll limits.
+*   **Engineering Objective:** Dampens external environmental disturbances (such as crosswind gusts or thermals). This provides a stable, vibration-isolated kinetic platform necessary for clear computer vision payload capture.
+
+### 3. Edge-Compute Autonomy Mode (Mission Profile)
+*   **System State:** The highest operational tier of the system. The flight controller executes closed-loop GPS waypoint navigation while continuously communicating with the **Raspberry Pi Zero 2 W** via a physical UART serial interface. 
+*   **Engineering Objective:** Coordinates real-time data collection where the edge computer dynamically processes incoming visual data streams, generates object detection alerts, and logs mission telemetry autonomously without human-in-the-loop dependencies.
+
+### 4. First-Person View (FPV) Telemetry Mode (Payload Monitoring)
+*   **System State:** Concurrent deployment of a dedicated high-bandwidth onboard camera sensor routing through the edge computing subsystem to a ground-based visualization gateway.
+*   **Engineering Objective:** Provides real-time situational awareness and visual confirmation of computer vision bounding boxes to the Payload Engineer at the Ground Control Laptop, serving as a secondary verification mechanism for mission validation.
+
+## 1.6 Project Glossary & Acronym Registry
+
+To ensure precise systems engineering communication across hardware, software, and regulatory domains, the following unified acronym matrix establishes the definitive vocabulary baseline for the AIrSplitter project.
+
+### 1. Embedded Avionics & Component-Specific Acronyms
+This section defines acronyms specific to the physical propulsion, power, and computational components integrated into the AV-01 airframe.
+
+*   **ADC (Analog-to-Digital Converter):** Integrated circuitry on the Mateksys F405-WING-V2 that translates raw physical voltages (battery cell metrics or RSSI) into digital data lines.
+*   **BEC (Battery Elimination Circuit):** A dedicated DC-to-DC step-down voltage regulator. The Cobra 60A ESC features an integrated 6A Switching BEC to cleanly drop raw battery voltage down to a stable 5.5V rail to power servos and avionics without a separate battery.
+*   **CLI (Command Line Interface):** The text-based input console inside the iNav firmware used to configure, dump, or restore system-level parameters.
+*   **ELRS (ExpressLRS):** An open-source, high-performance, ultra-low-latency 2.4GHz radio control link protocol utilized by the RadioMaster RP3 receiver and TX16S transmitter.
+*   **ESC (Electronic Speed Controller):** The high-current power modulation unit (Cobra 60A) that interprets PWM throttle signals from the flight controller and delivers alternating three-phase current to spin the brushless motor.
+*   **FC (Flight Controller):** The localized processing core (Mateksys F405-WING-V2) containing an array of sensors to compute and execute flight control loops.
+*   **FPV (First-Person View):** Real-time onboard camera image capture routed through a dedicated wireless link to ground control for spatial pilot monitoring.
+*   **IMU (Inertial Measurement Unit):** The onboard sensor suite combining an accelerometer and a gyroscope (InvenSense ICM42688-P) to track the aircraft's dynamic 3D orientation.
+*   **LiPo (Lithium Polymer):** The lightweight, high-energy-density rechargeable chemical battery composition (Zeee 3S 50C) powering the aircraft's electrical distribution bus.
+*   **MCU (Microcontroller Unit):** The central integrated processing chip (STM32F405RGT6 running at 168MHz) executing the main embedded autopilot firmware.
+*   **OSD (On-Screen Display):** An integrated video chipset (AT7456E) that overlays real-time critical telemetry (speed, altitude, battery draw) directly over the camera feed.
+*   **PWM (Pulse Width Modulation):** A square-wave electrical signal where changing the duty cycle controls precise mechanical servo motor positioning or ESC throttle values.
+*   **UART (Universal Asynchronous Receiver-Transmitter):** Dedicated physical serial communication ports on the microcontroller used to bridge data lines between hardware components.
+
+### 2. Systems, Aerospace, & Guidance Engineering Acronyms
+This section details industry-wide primitives used across NASA, DoD, and enterprise aerospace development cycles.
+
+*   **AGL (Above Ground Level):** The operational altitude of an aircraft measured relative to the ground surface directly beneath it.
+*   **ConOps (Concept of Operations):** A foundational user-centric systems document defining the operational environment, boundaries, mission profiles, and stakeholder objectives of a project.
+*   **GNC (Guidance, Navigation, and Control):** The structural systems engineering column managing path selection (Guidance), state estimation (Navigation), and physical stabilization manipulation (Control).
+*   **HIL (Hardware-in-the-Loop):** A simulation protocol where physical avionics hardware interacts with real-time mathematical flight simulators to validate control loops before actual flight.
+*   **KPP (Key Performance Parameter):** The critical, non-negotiable threshold performance metrics required for core mission success.
+*   **KSA (Key System Attribute):** A secondary optimization attribute indicating desired targets that can be subject to engineering trades.
+*   **MAC (Mean Aerodynamic Chord):** The longitudinal reference length of the wing used to define the stable mechanical balance bounds for the aircraft's center of gravity.
+*   **MAVLink (Micro Air Vehicle Link):** An industry-standard, highly compressed, lightweight serial messaging protocol used to pipe telemetry data packets between autopilots and companion payload computers.
+*   **MBSE (Model-Based Systems Engineering):** A formalized methodology leveraging digital models (SysML) to support system requirements, design, analysis, and verification throughout the lifecycle.
+*   **MTOW (Maximum Takeoff Weight):** The absolute maximum physical mass limits at which an airframe can legally and structurally achieve flight.
+*   **RTB (Return-To-Base):** An automated safety backup flight profile that commands an autopilot to navigate back to the initial launch coordinates during an anomalous event.
+*   **RSSI (Received Signal Strength Indicator):** A formal power measurement value mapping the raw health and structural performance of an RF control link, measured in dBm.
+*   **SysML (Systems Modeling Language):** An open standard modeling language based on UML used by systems engineers to specify, analyze, and visualize complex multi-domain architectures.
+
+### 3. Software, Edge, & DevOps Engineering Acronyms
+This section maps the terminology governing data pipelines, cloud endpoints, and version control.
+
+*   **CNN (Convolutional Neural Network):** A specialized deep learning algorithm layout optimized for computer vision operations, executed on the edge payload to handle object tracking.
+*   **DevOps (Development Operations):** A professional software practice merging active application coding cycles with infrastructure deployment pipelines.
+*   **LFS (Large File Storage):** An extension for Git that replaces heavy binary objects (such as CAD assemblies) with tiny text pointers, preventing repository bloat.
+*   **OS (Operating System):** The master system software running on a processor; the Raspberry Pi utilizes a modified Debian Linux micro-kernel kernel.
+*   **PAT (Personal Access Token):** A secure, encrypted text string used to securely authenticate GitBash terminal commands with GitHub without passing plaintext passwords.
+*   **PR (Pull Request):** A formal web portal used to submit branch additions to a main code repository, allowing teammates to peer-review code before final integration.
+*   **UART / Serial Ingestion:** The rate at which the edge processing computer consumes data chunks across a serial pipeline, measured as a Baud rate.
+
+### 4. Matek M10Q-5883 GPS & Compass Specific Registries
+This section defines the hardware protocols, chip architectures, and interface systems specific to the onboard positioning and heading sensor payload.
+
+*   **BDS (BeiDou Navigation Satellite System):** The Chinese global satellite navigation constellation. The M10Q hardware tracks this concurrently alongside GPS, GLONASS, and Galileo to maximize satellite visibility.
+*   **Galileo:** The European Union's global navigation satellite system constellation, supported natively by the u-blox M10 platform.
+*   **GLONASS (Globalnaya Navigatsionnaya Sputnikovaya Sistema):** The Russian aerospace global navigation satellite system constellation, providing secondary multi-constellation redundancy.
+*   **GNSS (Global Navigation Satellite System):** The universal umbrella term covering all global satellite positioning constellations. The M10Q is a GNSS module rather than just a basic "GPS" sensor because it tracks four global constellations simultaneously.
+*   **I2C (Inter-Integrated Circuit):** A synchronous, multi-master, multi-slave, packet-switched serial communication bus. On the M10Q-5883, the QMC5883L magnetic compass uses the I2C interface lines (Data [SDA] and Clock [SCL]) to pipe spatial heading variables to the flight controller.
+*   **L1 Frequency Band:** The primary radio frequency spectrum (1575.42 MHz) utilized by civil GNSS satellites. The M10Q's patch antenna is tuned specifically to ingest L1 signals.
+*   **NMEA (National Marine Electronics Association):** A standard serial data protocol used by maritime and aviation electronics. The M10Q can output raw text strings (e.g., $GNGGA, $GNRMC) across its UART pipeline at a default rate of 1Hz.
+*   **PPS (Pulse Per Second):** A highly precise physical electrical pulse emitted exactly once every second by the GNSS module. The M10Q features an onboard green PPS LED that blinks at a steady 1Hz to signal a hard 3D position lock.
+*   **QMC5883L:** The specific surface-mount ASIC magnetic sensor chip integrated into the Matek board layout. It functions as the system's primary 3-axis digital compass to establish magnetic aircraft heading data.
+*   **QZSS (Quasi-Zenith Satellite System):** A regional satellite-based augmentation system operated by Japan, tracked natively by the u-blox core to enhance positioning stability.
+*   **RST (Reset Pad):** A physical surface-mount pin breakout on the Matek PCB. Bridging this pad directly to Ground (GND) for ≥100 ms wipes volatile tracking memory and triggers a cold start to clear processing faults.
+*   **SBAS (Satellite-Based Augmentation System):** A regional network of geostationary satellites (such as WAAS in North America) providing differential corrections to boost spatial calculation precision.
+*   **UBX (u-blox Binary Protocol):** A high-density, low-overhead proprietary binary message stream developed by u-blox. Configuring iNav to consume the UBX protocol at 5Hz significantly reduces serialization lag compared to standard text-based NMEA lines.
