@@ -21,3 +21,25 @@ This architectural control document explicitly allocates every physical Bill of 
 | **Wheels** | Landing Gear Assembly | Aerostructures (AERO) | Absorbs kinetic impact loading during takeoff and recovery sequences. |
 | **Edge Companion Computer** | Raspberry Pi Zero 2 W | Mission Payload (PAYLOAD) | Executes local computer vision scripts and handles high-level sorting. |
 | **Servo Wire Extensions** | 3-pin Servo Cables | Wiring Interconnect (BUS) | Conducts low-voltage PWM signals and 5V power to localized actuators. |
+
+
+## 2.2. Primary Downlink Node (5.8GHz RF Architecture)
+Following a trade study evaluating local environmental interference (wooded terrain) and computational overhead on the Raspberry Pi Zero 2 W, a dedicated digital 5.8GHz RF link has been selected.
+
+```mermaid
+graph TD
+    Battery[Main LiPo Battery] -->|11.1V Direct| BEC[5V/12V Dual BEC Regulator]
+    BEC -->|5V 2.5A| Pi[Raspberry Pi Zero 2 W]
+    BEC -->|12V 2A| RF_Tx[5.8GHz Digital Air Unit]
+    
+    Camera[HD Camera Payload] -->|MIPI CSI Ribbon| RF_Tx
+    Pi -->|UART Serial Telemetry| RF_Tx
+    
+    RF_Tx -.->|Wireless 5.8GHz RF| GCS_Rx[Ground Receiver Node]
+    GCS_Rx -->|HDMI Signal| HDMI_Cap[UVC Capture Card]
+    HDMI_Cap -->|USB Node| GCS_Laptop[Ground Control Laptop]
+```
+
+## 2. Component Budgetary Constraints
+* **Pi Computational Load:** Independent ASIC video encoding on Air Unit ensures ~0% CPU strain on Pi Zero for video transmission.
+* **Power Bus Impact:** Isolated from Pi power rail; eliminates brown-out risks.
