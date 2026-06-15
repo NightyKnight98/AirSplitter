@@ -32,15 +32,15 @@ graph TD
     Cobra_ESC -->|VCC Power Bus| Matek_FC[Mateksys F405-WING-V2 FC]
     
     Matek_FC -->|Filtered 5V 2A Rail| Pi[Raspberry Pi Zero 2 W]
-    Matek_FC -->|Isolated 9V/12V 2A Rail| RF_Tx[Walksnail Avatar Standalone VTX]
+    Matek_FC -->|Isolated 9V/12V Rail| OpenIPC_VTX[OpenIPC VTX Node: RunCam WiFiLink 2 / EMAX Wyvern]
     
     ArduCam[ArduCam 5MP Camera] -->|MIPI CSI Ribbon| Pi
-    Pi -->|Digital Video Output Cable| RF_Tx
-    Matek_FC -->|UART Serial Telemetry OSD| RF_Tx
+    Pi -->|USB-to-Data Network Bridge| OpenIPC_VTX
+    Matek_FC -->|UART Serial MAVLink Telemetry| OpenIPC_VTX
     
-    RF_Tx -.->|Wireless 5.8GHz RF| GCS_Rx[Walksnail Avatar VRX Box]
-    GCS_Rx -->|HDMI Signal Cable| HDMI_Cap[UVC Capture Card Dongle]
-    HDMI_Cap -->|USB Bus Node| GCS_Laptop[Ground Control Laptop]
+    OpenIPC_VTX -.->|High-Power Wireless 5.8GHz WFB-ng Packets| OpenIPC_VRX[OpenIPC Ground Receiver Box]
+    OpenIPC_VRX -->|Native USB-C OTG Cable| GCS_Laptop[Ground Control Laptop]
+
 
 ```
 
