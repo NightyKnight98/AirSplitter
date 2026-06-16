@@ -54,9 +54,11 @@ The AirSplitter propulsion and edge-computing arrays are powered by a central Li
 For ambient operations below 55°F, batteries must be stored inside insulated, heated transport containers prior to airframe insertion. Launching with a cold-soaked battery pack is a strict flight safety violation.
 
 ---
-
+## Operational Environment Diagram
 ![AirSplitter Operational Environment Diagram](assets/Operational_Environment_Diagram.png)
 
+## Aerial View of Operational Envrionment
 ![AirSplitter Operational Environment Aerial View](assets/true_aerial_view_operating_environment.png)
 
+## Front View of Operational Environment
 ![AirSplitter Operational Environment Front View](assets/true_front_view_operating_environment.png)
