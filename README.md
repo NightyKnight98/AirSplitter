@@ -60,4 +60,6 @@ This project repository explicitly rejects unorganized folder structures in favo
 
 ![AirSplitter Systems Context Diagram](docs/00_ConOps/assets/System_Context_Diagram.png)
 
+## Operational Environment Diagram
+
 ![AirSplitter Operational Environment Diagram](docs/00_ConOps/assets/Operational_Environment_Diagram.png)

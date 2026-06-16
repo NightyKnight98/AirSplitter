@@ -55,8 +55,8 @@ For ambient operations below 55°F, batteries must be stored inside insulated, h
 
 ---
 
-![AirSplitter Operational Environment Diagram](docs/00_ConOps/assets/Operational_Environment_Diagram.png)
+![AirSplitter Operational Environment Diagram](assets/Operational_Environment_Diagram.png)
 
-![AirSplitter Operational Environment Aerial View](docs/00_ConOps/assets/true_aerial_view_operating_environment.png)
+![AirSplitter Operational Environment Aerial View](assets/true_aerial_view_operating_environment.png)
 
-![AirSplitter Operational Environment Aerial View](docs/00_ConOps/assets/true_front_view_operating_environment.png)
+![AirSplitter Operational Environment Front View](assets/true_front_view_operating_environment.png)
