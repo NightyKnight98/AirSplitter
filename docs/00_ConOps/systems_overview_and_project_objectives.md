@@ -146,3 +146,7 @@ This section defines the hardware protocols, chip architectures, and interface s
 *   **RST (Reset Pad):** A physical surface-mount pin breakout on the Matek PCB. Bridging this pad directly to Ground (GND) for ≥100 ms wipes volatile tracking memory and triggers a cold start to clear processing faults.
 *   **SBAS (Satellite-Based Augmentation System):** A regional network of geostationary satellites (such as WAAS in North America) providing differential corrections to boost spatial calculation precision.
 *   **UBX (u-blox Binary Protocol):** A high-density, low-overhead proprietary binary message stream developed by u-blox. Configuring iNav to consume the UBX protocol at 5Hz significantly reduces serialization lag compared to standard text-based NMEA lines.
+
+---
+
+![AirSplitter Systems Context Diagram](docs/02_Architecture/System_Context_Diagram.png)
