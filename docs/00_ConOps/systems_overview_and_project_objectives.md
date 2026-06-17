@@ -149,4 +149,4 @@ This section defines the hardware protocols, chip architectures, and interface s
 
 ---
 
-![AirSplitter Systems Context Diagram](docs/02_Architecture/System_Context_Diagram.png)
+![AirSplitter Systems Context Diagram](assets/System_Context_Diagram.png)
