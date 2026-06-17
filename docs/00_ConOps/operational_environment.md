@@ -6,7 +6,7 @@ The AirSplitter Unmanned Aircraft System (UAS) operates strictly under the legal
 ### 1.1 Primary Framework: FAA Part 107 (Commercial/Research)
 *   **Operating Authority:** Conducted under FAA Advisory Circular (AC) 107-2A. 
 *   **Airspace Restriction:** Restricted entirely to **Class G (Uncontrolled) Airspace** up to the baseline structural ceiling. Operations within Class B, C, D, or E surface areas require explicit LAANC (Low Altitude Authorization and Notification Capability) digital clearance prior to battery initialization.
-*   **Visual Line of Sight (VLOS):** All flights must maintain un-aided VLOS with a designated Visual Observer (VO) assisting the Remote Pilot in Command (RPIC). The 0.75-mile downlink range limit is the absolute theoretical boundary; physical flight paths will truncate if atmospheric haze degrades direct visual monitoring.
+*   **Visual Line of Sight (VLOS):** All flights must maintain un-aided VLOS with a designated Visual Observer (VO) assisting the Remote Pilot in Command (RPIC). The 0.75-mile downlink range limit is the absolute theoretical boundary; physical flight paths will truncate if atmospheric haze degrades direct visual monitoring (107.A.4.1).
 
 ### 1.2 Registration & Identification
 *   **FAA Digital Registration:** The airframe must display its unique FAA registration number externally via permanent marker or engraving.
