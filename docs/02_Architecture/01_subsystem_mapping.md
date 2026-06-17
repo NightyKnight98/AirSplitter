@@ -44,6 +44,28 @@ graph TD
 
 ```
 
+graph TD
+    %% Airborne Infrastructure
+    subgraph Airborne Aircraft Node
+        Cobra_ESC[Cobra 60A ESC] -->|Raw LiPo Power| Matek_FC[Mateksys F405-WING-V2]
+        
+        Matek_FC -->|Clean 5V Rail| Pi_Zero[Raspberry Pi Zero 2 W]
+        Matek_FC -->|Isolated 9V/12V Rail| Walksnail_VTX[Walksnail Avatar VTX V2/V3]
+        
+        ArduCam[ArduCam 5MP Camera] -->|CSI Ribbon Cable| Pi_Zero
+        Pi_Zero -->|Digital Output Cable| Walksnail_VTX
+    end
+
+    %% Wireless Transmission Bridge
+    Walksnail_VTX -.->|Wireless 5.8GHz Radio Waves| Walksnail_VRX
+
+    %% Ground Station Infrastructure
+    subgraph Ground Control Station Node
+        Walksnail_VRX[Walksnail Avatar FPV VRX Receiver] -->|HDMI Cable| UVC_Cap[USB Capture Card Dongle]
+        UVC_Cap -->|USB Native Bus Port| GCS_Laptop[Ground Control Laptop]
+    end
+
+
 ## 2. Component Budgetary Constraints
 * **Pi Computational Load:** Independent ASIC video encoding on Air Unit ensures ~0% CPU strain on Pi Zero for video transmission.
 * **Power Bus Impact:** Isolated from Pi power rail; eliminates brown-out risks.
