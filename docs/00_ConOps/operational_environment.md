@@ -6,7 +6,7 @@ The AirSplitter Unmanned Aircraft System (UAS) operates strictly under the legal
 ### 1.1 Primary Framework: FAA Part 107 (Commercial/Research)
 *   **Operating Authority:** Conducted under FAA Advisory Circular (AC) 107-2A. 
 *   **Airspace Restriction:** Restricted entirely to **Class G (Uncontrolled) Airspace** up to the baseline structural ceiling. Operations within Class B, C, D, or E surface areas require explicit LAANC (Low Altitude Authorization and Notification Capability) digital clearance prior to battery initialization.
-*   **Visual Line of Sight (VLOS):** All flights must maintain un-aided VLOS with a designated Visual Observer (VO) assisting the Remote Pilot in Command (RPIC). The 0.75-mile downlink range limit is the absolute theoretical boundary; physical flight paths will truncate if atmospheric haze degrades direct visual monitoring (107.A.4.1).
+*   **Visual Line of Sight (VLOS):** All flights must maintain un-aided VLOS with a designated Visual Observer (VO) assisting the Remote Pilot in Command (RPIC). The 0.75-mile downlink range limit is the absolute theoretical boundary; physical flight paths will truncate if atmospheric haze degrades direct visual monitoring (107-A.4.1).
 
 ### 1.2 Registration & Identification
 *   **FAA Digital Registration:** The airframe must display its unique FAA registration number externally via permanent marker or engraving.
@@ -16,7 +16,7 @@ The AirSplitter Unmanned Aircraft System (UAS) operates strictly under the legal
 
 ## 2. Preliminary Environmental Operating Envelope
 
-*   **Altitude Limits:** Maximum **400 feet AGL (Above Ground Level)** per FAA § 107.51, with local operational flight testing targets set to a conservative 150–250 feet AGL to maximize the ArduCam's downward pixel density for object detection.
+*   **Altitude Limits:** Maximum **400 feet AGL (Above Ground Level)** per FAA § 107.51, with local operational flight testing targets set to a conservative 150–250 feet AGL to maximize the Sony IMX415 Image Sensor downward pixel density for object detection.
 *   **Airspace Environment:** Class G Uncontrolled. Zero operations permitted over unprotected human assemblies or moving vehicles (§ 107.39).
 *   **Geographic Obstructions:** Dense rural tree canopies. Flight paths must maintain a minimum 50-foot vertical clearance buffer above the highest documented treeline canopy to mitigate localized mechanical wind shear and signal degradation.
 
@@ -46,8 +46,8 @@ The system utilizes a dual-link radio topology (2.4GHz for control link, 5.8GHz 
 
 ### 4.1 Temperature-Induced Performance Deltas
 The AirSplitter propulsion and edge-computing arrays are powered by a central Lithium-Polymer (LiPo) battery pack. Chemical discharge efficiency is bound to the following temperature-dependent operational envelopes:
-*   **Optimal Range [60°F to 90°F / 15.5°C to 32.2°C]:** Baseline flight performance. Internal resistance is minimized, allowing consistent nominal current delivery to the Cobra 60A ESC. Expected flight endurance: **~22–25 minutes** at full cruise throttle.
-*   **Cold Weather Degradation Threshold [<50°F / 10°C]:** Severe drop in ion mobility spikes internal resistance. Attempting launch bursts triggers instantaneous voltage sag. *Endurance Safety Factor:* Flight planning timelines must automatically be truncated by **30% to 40%** (~13–15 minute flight ceilings maximum) to prevent unannounced cell exhaustion. 
+*   **Optimal Range [60°F to 90°F / 15.5°C to 32.2°C]:** Baseline flight performance. Internal resistance is minimized, allowing consistent nominal current delivery to the Cobra 60A ESC. Expected flight endurance: **~15–20 minutes** at full cruise throttle and onboard compute power draw.
+*   **Cold Weather Degradation Threshold [<50°F / 10°C]:** Severe drop in ion mobility spikes internal resistance. Attempting launch bursts triggers instantaneous voltage sag. *Endurance Safety Factor:* Flight planning timelines must automatically be truncated by **30% to 40%** (~8–12 minute flight ceilings maximum) to prevent unannounced cell exhaustion. 
 *   **Thermal Safety Limit [>110°F / 43.3°C]:** High ambient temperatures combined with high-current internal discharge heat risk triggering structural swelling ("puffing") and internal layer short-circuits. Operations must be suspended to prevent catastrophic thermal runaway over wooded zones.
 
 ### 4.2 Pre-Flight Mitigations

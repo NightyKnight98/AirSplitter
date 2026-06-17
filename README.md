@@ -8,7 +8,7 @@
 *   **Edge Computing Engineer:** RPi Zero 2W software, MAVLink integration
 
 ## Project Overview
-AIrSplitter is a professional-grade systems engineering project designed to validate autonomous fixed-wing flight control and edge-computing payloads. The platform is built entirely from scratch utilizing custom-machined white foam board structures, executing industry-standard aerospace development lifecycles. This repository serves as a technical engineering portfolio demonstrating the rigorous integration of hardware, low-level flight firmware, and high-level edge application logic.
+AirSplitter is a professional-grade systems and aerospace engineering project designed to validate autonomous fixed-wing flight control and edge-computing payloads. The platform is built entirely from scratch utilizing custom-machined white foam board structures, executing industry-standard aerospace development lifecycles. This repository serves as a technical engineering portfolio demonstrating the rigorous integration of hardware, low-level flight firmware, and high-level edge application logic.
 
 ### System Specifications & Parameters
 *   **Airframe Configuration:** Single-propeller, fixed-wing tractor configuration.

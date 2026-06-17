@@ -1,7 +1,7 @@
 # ConOps: Systems Overview and Project Objectives
 
 ## 1.1 Mission Statement
-The primary mission of the AirSplitter Unmanned Aerial Vehicle (AV-01) is to execute autonomous transit to a designated area of interest, perform real-time onboard object detection via an integrated edge-compute computer vision payload, and securely downlink target alert telemetry to the ground gateway. The system must subsequently execute a safe return-to-base (RTB) autonomous flight profile and recovery sequence while operating strictly within predefined environmental, aerodynamic, and regulatory constraints.
+The primary mission of the AirSplitter Unmanned Aerial Vehicle (AV-01) is to execute both manual and autonomous transit to a designated area of interest, perform real-time onboard object detection via an integrated edge-compute computer vision payload, and securely downlink target alert telemetry to the ground gateway. The system must subsequently execute a safe return-to-base (RTB) autonomous flight profile and recovery sequence while operating strictly within predefined environmental, aerodynamic, and regulatory constraints.
 
 ## 1.2 Systems Performance and Verification Objectives
 1. Systems Engineering and Airframe Constriants
@@ -21,7 +21,7 @@ The primary mission of the AirSplitter Unmanned Aerial Vehicle (AV-01) is to exe
 *   **Verification Method:** Analysis of post-flight iNav blackbox telemetry flight path tracks.
 
 1. RF Telemetry & Link Reliability
-*   **Objective:** Maintain an uninterrupted 2.4GHz ExpressLRS control link margin with a Received Signal Strength Indicator (RSSI) of ≥ -100 dBm and a packet rate of 100Hz at a maximum operational line-of-sight (LOS) radius of 0.5 miles (0.8 km) from the RadioMaster TX16S.
+*   **Objective:** Maintain an uninterrupted 2.4GHz ExpressLRS control link margin with a Received Signal Strength Indicator (RSSI) of ≥ -100 dBm and a packet rate of 100Hz at a maximum operational line-of-sight (LOS) radius of 0.75 miles (0.8 km) from the RadioMaster TX16S.
 *   **Verification Method:** Real-time downlink telemetry tracking and post-flight link-quality data audits.
 
 1. Edge Computing & Computer Vision Payload

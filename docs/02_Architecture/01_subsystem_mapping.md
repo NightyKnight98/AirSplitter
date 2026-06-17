@@ -1,71 +1,84 @@
-# 2.1 Component-to-Subsystem Mapping Matrix
+# Subsystem Mapping & Bill of Materials (BOM)
 
-This architectural control document explicitly allocates every physical Bill of Materials (BOM) item and structural component to its respective functional aircraft subsystem.
+This document establishes the hardware inventory, subsystem boundaries, and electrical/data interfaces for the AirSplitter autonomous fixed-wing aircraft.
 
-| Component / Airframe Part | Manufacturer / Model / Material | Allocated Subsystem | Primary Functional Role Within Subsystem |
+## 1. Complete System Bill of Materials (BOM)
+
+| Subsystem | Component Description | Qty | Key Specifications |
 | :--- | :--- | :--- | :--- |
-| **Brushless Motor** | Cobra C-2814/8 (Kv=1850) | Propulsion (PROP) | Converts electrical energy into kinetic rotational energy. |
-| **Propeller** | Optimized Flight Propeller | Propulsion (PROP) | Translates rotational torque into aerodynamic kinetic thrust. |
-| **Electronic Speed Controller** | Cobra 60A FPV Wing ESC | Propulsion / Power | Modulates three-phase motor current; steps down voltage via 6A BEC. |
-| **LiPo Battery** | Zeee 3S 3200mAh 11.1V 50C | Power Distribution (PWR) | Master chemical energy reservoir for the complete system bus. |
-| **Power Switch & Wiring** | Current On-Off XT60 / 12AWG | Power Distribution (PWR) | Master physical circuit breaker and high-current power distribution lines. |
-| **Flight Controller** | Mateksys F405-WING-V2 | Guidance, Nav, & Control (GNC) | Embedded autopilot core; runs IMU sensor loop configurations. |
-| **GNSS & Compass Module** | Matek M10Q-5883 | Guidance, Nav, & Control (GNC) | Generates global 3D coordinate tracking and true magnetic heading. |
-| **Radio Receiver** | RadioMaster RP3 ELRS 2.4GHz | Communication (COMMS) | Receives uplink pilot control pulses; transmits downlink telemetry back. |
-| **Digital Servos** | TowerPro MG92B | Actuation (ACT) | Electronically drives the physical mechanical linkages to control surfaces. |
-| **Ailerons** | White Foam Board | Actuation / Aerostructures | Deflects air asymmetrically to execute aerodynamic roll control. |
-| **Elevator** | White Foam Board | Actuation / Aerostructures | Deflects air symmetrically to execute aerodynamic pitch control. |
-| **Rudder** | White Foam Board | Actuation / Aerostructures | Deflects air vertically to execute aerodynamic yaw control. |
-| **Wings** | White Foam Board / Primary Spar | Aerostructures (AERO) | Generates aerodynamic lift forces and provides lateral stabilization. |
-| **Fuselage** | Balsa Wood | Aerostructures (AERO) | Central structural aerodynamic fairing; protects internal electronics payload. |
-| **Wheels** | Landing Gear Assembly | Aerostructures (AERO) | Absorbs kinetic impact loading during takeoff and recovery sequences. |
-| **Edge Companion Computer** | Raspberry Pi Zero 2 W | Mission Payload (PAYLOAD) | Executes local computer vision scripts and handles high-level sorting. |
-| **Servo Wire Extensions** | 3-pin Servo Cables | Wiring Interconnect (BUS) | Conducts low-voltage PWM signals and 5V power to localized actuators. |
+| **Airframe** | White Foam Board (20” x 30”) | — | Hand-cut airfoils, fuselage, elevator, and rudder |
+| **Propulsion** | Cobra C-2814/8 Brushless Motor | 1 | Kv=1850, high-torque outrunner |
+| **Propulsion** | APC 7x5 Thin Electric Pusher Propeller | 1 | Configured for rear pusher orientation |
+| **Power/ESC** | Cobra 60A FPV Wing ESC | 1 | 6A Switching BEC (Bypassed for Servos) |
+| **Power/ESC** | Zeee 3S LiPo Battery | 1 | 3200mAh, 11.1V, 50C Discharge, Soft Case |
+| **Power/ESC** | Current On-Off Electric Power Switch | 1 | High-current mechanical switch with XT60 handles |
+| **Power/ESC** | XT60 Adapter with Pigtail Bus | 1 | 12AWG 100mm Ultra‑Flexible Silicone Wire |
+| **Avionics** | Mateksys Flight Controller F405-WING-V2 | 1 | STM32F405 MCU, ICM42688-P IMU, DPS310 Baro |
+| **Avionics** | Matek M10Q-5883 GNSS & Compass | 1 | u-blox M10 engine, QMC5883L Magnetometer via I2C |
+| **Actuators** | TowerPro MG92B Servos | 4 | Digital, Metal Gear, High Torque |
+| **Actuators** | 3-pin Servo Extension Wire Cables | — | Signal and power distribution extension lines |
+| **Uplink** | RadioMaster RP3 ELRS FPV Receiver | 1 | 2.4GHz ExpressLRS Nano Receiver, Dual Antenna |
+| **Edge Compute** | Raspberry Pi Zero 2 W | 1 | Quad-core 64-bit ARM Cortex-A53, Local CV Node |
+| **Downlink** | RunCam WiFiLink2-G VTX & Sony Camera | 1 | Integrated Sony IMX415 Sensor & 5.8GHz OpenIPC VTX |
+| **Ground Station**| RadioMaster TX16S MK3 Radio Controller | 1 | 2.4GHz ELRS Mode 2 Transmitter |
+| **Ground Station**| Laptop Computer (GCS) | 1 | Control Central, video streaming, cloud uplink |
+| **Ground Station**| RTL8812AU USB Laptop Network Card | 1 | 5.8GHz High-Power USB Wi-Fi Receiver Card |
+| **Consumables** | Soldering wire, Heat shrink, Adhesives | — | Bench assembly and airframe laminating materials |
 
+---
 
-## 2.2. Primary Downlink Node (5.8GHz RF Architecture)
-Following a trade study evaluating local environmental interference (wooded terrain) and computational overhead on the Raspberry Pi Zero 2 W, a dedicated digital 5.8GHz RF link has been selected.
+## 2. Integrated System Architecture Diagram
+
+This diagram models the **True Edge Computing** pipeline. Video frames are captured by the Sony camera, processed on the Raspberry Pi Zero 2 W for target tracking overlays, and then passed to the RunCam OpenIPC VTX for transmission down to the ground network card.
 
 ```mermaid
 graph TD
-    Battery[Main LiPo Battery] -->|Raw Voltage VCC| Cobra_ESC[Cobra 60A ESC]
-    Cobra_ESC -->|VCC Power Bus| Matek_FC[Mateksys F405-WING-V2 FC]
-    
-    Matek_FC -->|Filtered 5V 2A Rail| Pi[Raspberry Pi Zero 2 W]
-    Matek_FC -->|Isolated 9V/12V Rail| OpenIPC_VTX[OpenIPC VTX Node: RunCam WiFiLink 2 / EMAX Wyvern]
-    
-    ArduCam[ArduCam 5MP Camera] -->|MIPI CSI Ribbon| Pi
-    Pi -->|USB-to-Data Network Bridge| OpenIPC_VTX
-    Matek_FC -->|UART Serial MAVLink Telemetry| OpenIPC_VTX
-    
-    OpenIPC_VTX -.->|High-Power Wireless 5.8GHz WFB-ng Packets| OpenIPC_VRX[OpenIPC Ground Receiver Box]
-    OpenIPC_VRX -->|Native USB-C OTG Cable| GCS_Laptop[Ground Control Laptop]
+%% Power Subsystem Nodes
+Battery[Zeee 3S 3200mAh LiPo Battery] -->|11.1V Raw DC| Power_Switch[XT60 Current Power Switch]
+Power_Switch -->|12AWG Pigtail Bus| Matek_FC[Mateksys F405-WING-V2 Flight Controller]
 
+%% Propulsion Paths
+Matek_FC -->|VCC Battery Pass-Through Pads| Cobra_ESC[Cobra 60A FPV Wing ESC]
+Cobra_ESC -->|3-Phase AC Power| Cobra_Motor[Cobra C-2814/8 Brushless Motor]
+Cobra_Motor ===>|Mechanical Torque| APC_Prop[APC 7x5 Pusher Propeller]
 
+%% Main Avionics & Servo Power Distribution Hub
+Matek_FC -->|Integrated 5A Vx Servo BEC + PWM Signal| Servos[TowerPro MG92B Servos x4]
+
+%% Avionics Control Interfaces
+Matek_FC -->|DShot Telemetry Protocol| Cobra_ESC
+Matek_GNSS[Matek M10Q-5883 GNSS/Compass] <-->|I2C + UART Serial Data| Matek_FC
+
+%% Uplink Control Path
+RP3_Rx[RadioMaster RP3 ELRS 2.4GHz Rx] ==>|CRSF Telemetry Protocol| Matek_FC
+TX16S[RadioMaster TX16S MK3 GCS Controller] -.->|2.4GHz Wireless Link| RP3_Rx
+
+%% Edge Compute & OpenIPC Downlink Network (The Video Loop)
+Matek_FC -->|Filtered 5V 2A Power Rail| Pi_Zero[Raspberry Pi Zero 2 W]
+Matek_FC -->|Filtered 9V/12V 2A Power Rail| OpenIPC_VTX[RunCam WiFiLink2-G VTX]
+Matek_FC <-->|UART Serial MAVLink Telemetry| OpenIPC_VTX
+
+%% Video Pipeline Realignment
+OpenIPC_Cam[RunCam Bundled Sony Camera] -->|Native MIPI Ribbon Bus| Pi_Zero
+Pi_Zero -->|Runs YOLO/OpenCV - Bounding Box Injection| Pi_Zero
+Pi_Zero <-->|USB High-Speed Data Bridge with Overlays| OpenIPC_VTX
+
+%% Ground Control Infrastructure
+OpenIPC_VTX -.->|5.8GHz Wireless Video + Alert Overlay Data| Laptop_NetCard[RTL8812AU USB Laptop Network Card]
+Laptop_NetCard -->|Native USB Bus Port| GCS_Laptop[Ground Control Station Laptop]
 ```
 
-graph TD
-    %% Airborne Infrastructure
-    subgraph Airborne Aircraft Node
-        Cobra_ESC[Cobra 60A ESC] -->|Raw LiPo Power| Matek_FC[Mateksys F405-WING-V2]
-        
-        Matek_FC -->|Clean 5V Rail| Pi_Zero[Raspberry Pi Zero 2 W]
-        Matek_FC -->|Isolated 9V/12V Rail| Walksnail_VTX[Walksnail Avatar VTX V2/V3]
-        
-        ArduCam[ArduCam 5MP Camera] -->|CSI Ribbon Cable| Pi_Zero
-        Pi_Zero -->|Digital Output Cable| Walksnail_VTX
-    end
+---
 
-    %% Wireless Transmission Bridge
-    Walksnail_VTX -.->|Wireless 5.8GHz Radio Waves| Walksnail_VRX
+## 3. Core Subsystem Operational Protocols
 
-    %% Ground Station Infrastructure
-    subgraph Ground Control Station Node
-        Walksnail_VRX[Walksnail Avatar FPV VRX Receiver] -->|HDMI Cable| UVC_Cap[USB Capture Card Dongle]
-        UVC_Cap -->|USB Native Bus Port| GCS_Laptop[Ground Control Laptop]
-    end
+### Power Routing Mechanics
+The **Mateksys F405-WING-V2** acts as the singular power distribution center. 
+* **Servos:** Powered via the board's internal **Vx BEC**, jumped via solder pads to output exactly **6.0V** to maximize torque on the TowerPro MG92B digital servos. 
+* **Edge Compute:** The Raspberry Pi Zero 2 W draws power from a dedicated **5V 2A rail**.
+* **Video Downlink:** The RunCam WiFiLink2-G VTX is supplied directly via the filtered **9V/12V BEC** pad to insulate it from motor ripple noise.
 
-
-## 2. Component Budgetary Constraints
-* **Pi Computational Load:** Independent ASIC video encoding on Air Unit ensures ~0% CPU strain on Pi Zero for video transmission.
-* **Power Bus Impact:** Isolated from Pi power rail; eliminates brown-out risks.
+### Data Pipelines
+1. **Command Link (Uplink):** 2.4GHz ELRS wireless signals travel from the TX16S to the RP3 receiver, passing high-frequency CRSF packet streams to the flight controller.
+2. **Telemetry & Navigation:** The Matek M10Q-5883 parses live coordinates over UART, and true heading over I2C lines to update autopilot vectors.
+3. **Vision Processing (Downlink):** The Pi Zero captures video, overlays tracking data, and hands off the frames to the VTX via USB logic to be parsed as an OpenIPC UVC stream on the ground laptop.
