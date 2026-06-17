@@ -51,7 +51,7 @@ Matek_FC -->|Integrated 5A Vx Servo BEC + PWM Signal| Servos[TowerPro MG92B Serv
 
 %% Avionics Control Interfaces
 Matek_FC -->|DShot Telemetry Protocol| Cobra_ESC
-Matek_GNSS[Matek M10Q-5883 GNSS/Compass] <=>|I2C + UART Serial Data| Matek_FC
+Matek_GNSS[Matek M10Q-5883 GNSS/Compass] <-->|I2C + UART Serial Data| Matek_FC
 
 %% Uplink Control Path
 RP3_Rx[RadioMaster RP3 ELRS 2.4GHz Rx] ==>|CRSF Telemetry Protocol| Matek_FC
@@ -60,11 +60,12 @@ TX16S[RadioMaster TX16S MK3 GCS Controller] -.->|2.4GHz Wireless Link| RP3_Rx
 %% Edge Compute & OpenIPC Downlink Network
 Matek_FC -->|Filtered 5V 2A Power Rail| Pi_Zero[Raspberry Pi Zero 2 W]
 Matek_FC -->|Filtered 9V/12V 2A Power Rail| OpenIPC_VTX[RunCam WiFiLink2-G VTX]
-Matek_FC <=>|UART Serial MAVLink Telemetry| OpenIPC_VTX
+Matek_FC <-->|UART Serial MAVLink Telemetry| OpenIPC_VTX
 OpenIPC_Cam[RunCam Bundled Sony Camera] -->|Native MIPI Ribbon| OpenIPC_VTX
-OpenIPC_VTX <=>|USB High-Speed Data Bridge| Pi_Zero
+OpenIPC_VTX <-->|USB High-Speed Data Bridge| Pi_Zero
 
 %% Ground Control Infrastructure
 OpenIPC_VTX -.->|5.8GHz Wireless Video/Telemetry Data| Laptop_NetCard[RTL8812AU USB Laptop Network Card]
 Laptop_NetCard -->|Native USB Bus Port| GCS_Laptop[Ground Control Station Laptop]
 ```
+
