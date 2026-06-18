@@ -1,4 +1,4 @@
-# AirSplitter: Fixed-Wing Autonomous Systems Engineering Portfolio
+# AirSplitter: Fixed-Wing Autonomous Systems and Aerospace Engineering Portfolio
 
 # Team Roles
 *   **Lead Systems Engineer:** Orchestrating tasks, routing tasks to small integrated product team (IPT)
