@@ -46,30 +46,34 @@ graph TD
     Cobra_ESC -->|3-Phase AC Power| Cobra_Motor[Cobra C-2814/8 Brushless Motor]
     Cobra_Motor ===>|Mechanical Torque| APC_Prop[APC 7x5 Pusher Propeller]
     
-    %% Main Avionics & Servo Power Distribution Hub (Explicit Specs Added)
+    %% Main Avionics & Servo Power Distribution Hub
     Matek_FC -->|Vx Rail: 5.5V 8A BEC + PWM Signal| Servos[TowerPro MG92B Servos x4]
     
-    %% Avionics Control Interfaces
+    %% Avionics Control Interfaces & Sensor Buses
     Matek_FC -->|DShot Telemetry Protocol| Cobra_ESC
-    Matek_GNSS[Matek M10Q-5883 GNSS/Compass] <-->|I2C + UART Serial Data| Matek_FC
+    Matek_GNSS[Matek M10Q-5883 GNSS/Compass] <-->|UART2 Serial Data + I2C| Matek_FC
     Matek_Airspeed[Matek AS-DLVR Airspeed Sensor] <-->|I2C Shared Sensor Bus| Matek_FC
     
     %% Uplink Control Path
     RP3_Rx[RadioMaster RP3 ELRS 2.4GHz Rx] ==>|CRSF Telemetry Protocol| Matek_FC
     TX16S[RadioMaster TX16S MK3 GCS Controller] -.->|2.4GHz Wireless Link| RP3_Rx
     
-    %% Edge Compute & OpenIPC Downlink Network
-    Matek_FC -->|Filtered 5V 2A Power Rail| Pi_Zero[Raspberry Pi Zero 2 W]
-    Matek_FC -->|Filtered 12V 2A Video Rail| OpenIPC_VTX[RunCam WiFiLink2-G VTX]
-    Matek_FC <-->|UART Serial MAVLink Telemetry| OpenIPC_VTX
+    %% THE CRITICAL TELEMETRY CORRELATION FIX
+    Matek_FC ===>|Dedicated UART3: MAVLink Telemetry Stream| Pi_Zero[Raspberry Pi Zero 2 W]
     
-    %% Streamlined Non-Looping Video Pipeline
+    %% Edge Compute & OpenIPC Downlink Network
+    Matek_FC -->|Filtered 5V 2A Power Rail| Pi_Zero
+    Matek_FC -->|Filtered 12V 2A Video Rail| OpenIPC_VTX[RunCam WiFiLink2-G VTX]
+    Matek_FC <-->|UART1 Serial MAVLink Telemetry| OpenIPC_VTX
+    
+    %% Streamlined Video Pipeline
     OpenIPC_Cam[RunCam Bundled Sony Camera] -->|Native MIPI Ribbon Bus| Pi_Zero
     Pi_Zero -->|USB High-Speed Data Bridge with YOLO Overlays| OpenIPC_VTX
     
     %% Ground Control Infrastructure
     OpenIPC_VTX -.->|5.8GHz Wireless Video + Alert Overlay Data| Laptop_NetCard[RTL8812AU USB Laptop Network Card]
     Laptop_NetCard -->|Native USB Bus Port| GCS_Laptop[Ground Control Station Laptop]
+
 ```
 
 
