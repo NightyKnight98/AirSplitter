@@ -9,10 +9,10 @@ This document establishes the hardware inventory, subsystem boundaries, and elec
 | **Airframe** | White Foam Board (20” x 30”) | — | Hand-cut airfoils, fuselage, elevator, and rudder |
 | **Propulsion** | Cobra C-2814/8 Brushless Motor | 1 | Kv=1850, high-torque outrunner |
 | **Propulsion** | APC 7x5 Thin Electric Pusher Propeller | 1 | Configured for rear pusher orientation |
-| **Power/ESC** | Cobra 60A FPV Wing ESC | 1 | 6A Switching BEC (Bypassed for Servos) |
-| **Power/ESC** | Zeee 3S LiPo Battery | 1 | 3200mAh, 11.1V, 50C Discharge, Soft Case |
-| **Power/ESC** | Current On-Off Electric Power Switch | 1 | High-current mechanical switch with XT60 handles |
-| **Power/ESC** | XT60 Adapter with Pigtail Bus | 1 | 12AWG 100mm Ultra‑Flexible Silicone Wire |
+| **Propulsion** | Cobra 60A FPV Wing ESC | 1 | 6A Switching BEC (Bypassed for Servos) |
+| **Power** | Zeee 3S LiPo Battery | 1 | 3200mAh, 11.1V, 50C Discharge, Soft Case |
+| **Power** | Current On-Off Electric Power Switch | 1 | High-current mechanical switch with XT60 handles |
+| **Power** | XT60 Adapter with Pigtail Bus | 1 | 12AWG 100mm Ultra‑Flexible Silicone Wire |
 | **Avionics** | Mateksys Flight Controller F405-WING-V2 | 1 | STM32F405 MCU, ICM42688-P IMU, DPS310 Baro |
 | **Avionics** | Matek M10Q-5883 GNSS & Compass | 1 | u-blox M10 engine, QMC5883L Magnetometer via I2C |
 | **Avionics** | Matek Digital Airspeed Sensor AS-DLVR-I2C | 1 | DLVR-L10D, I2C interface, AS-DLVR-I2C with CAN Node L431 |
@@ -38,8 +38,9 @@ graph TD
     Battery[Zeee 3S 3200mAh LiPo Battery] -->|11.1V Raw DC| Power_Switch[XT60 Current Power Switch]
     Power_Switch -->|12AWG Pigtail Bus| Matek_FC[Mateksys F405-WING-V2 Flight Controller]
     
-    %% Propulsion Paths
+    %% Propulsion Subsystem Drivetrain (ESC Unified Here)
     Matek_FC -->|VCC Battery Pass-Through Pads| Cobra_ESC[Cobra 60A FPV Wing ESC]
+    Matek_FC ===>|Bidirectional UART/Pin: DShot Protocol + Telemetry| Cobra_ESC
     Cobra_ESC -->|3-Phase AC Power| Cobra_Motor[Cobra C-2814/8 Brushless Motor]
     Cobra_Motor ===>|Mechanical Torque| APC_Prop[APC 7x5 Pusher Propeller]
     
@@ -47,7 +48,6 @@ graph TD
     Matek_FC -->|Vx Rail: 5.5V 8A BEC + PWM Signal| Servos[TowerPro MG92B Servos x4]
     
     %% Avionics Control Interfaces & Sensor Buses
-    Matek_FC -->|DShot Telemetry Protocol| Cobra_ESC
     Matek_GNSS[Matek M10Q-5883 GNSS/Compass] <-->|UART2 Serial Data + I2C| Matek_FC
     Matek_Airspeed[Matek AS-DLVR Airspeed Sensor] <-->|I2C Shared Sensor Bus| Matek_FC
     

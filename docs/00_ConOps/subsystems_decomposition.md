@@ -41,8 +41,9 @@ graph TD
     Battery[Zeee 3S 3200mAh LiPo Battery] -->|11.1V Raw DC| Power_Switch[XT60 Current Power Switch]
     Power_Switch -->|12AWG Pigtail Bus| Matek_FC[Mateksys F405-WING-V2 Flight Controller]
     
-    %% Propulsion Paths
+    %% Propulsion Subsystem Drivetrain (ESC Unified Here)
     Matek_FC -->|VCC Battery Pass-Through Pads| Cobra_ESC[Cobra 60A FPV Wing ESC]
+    Matek_FC ===>|Bidirectional UART/Pin: DShot Protocol + Telemetry| Cobra_ESC
     Cobra_ESC -->|3-Phase AC Power| Cobra_Motor[Cobra C-2814/8 Brushless Motor]
     Cobra_Motor ===>|Mechanical Torque| APC_Prop[APC 7x5 Pusher Propeller]
     
@@ -50,7 +51,6 @@ graph TD
     Matek_FC -->|Vx Rail: 5.5V 8A BEC + PWM Signal| Servos[TowerPro MG92B Servos x4]
     
     %% Avionics Control Interfaces & Sensor Buses
-    Matek_FC -->|DShot Telemetry Protocol| Cobra_ESC
     Matek_GNSS[Matek M10Q-5883 GNSS/Compass] <-->|UART2 Serial Data + I2C| Matek_FC
     Matek_Airspeed[Matek AS-DLVR Airspeed Sensor] <-->|I2C Shared Sensor Bus| Matek_FC
     
@@ -76,4 +76,16 @@ graph TD
 
 ```
 
+## N-Squared Interface Matrix
+
+
+| Rows (Outputs) \ Columns (Inputs) | 1. Power Bus | 2. Propulsion | 3. Avionics / FC | 4. Actuation | 5. RF Uplink | 6. Edge Compute | 7. GCS Laptop |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1. Power Bus (Zeee LiPo / Switch)** | **[POWER]** | | VCC Power Pass | 8A Vx Servo BEC | | 5V 2A Rail | |
+| **2. Propulsion (ESC / Motor / Prop)**| | **[PROPULSION]**| ESC DShot Telem | Mechanical Load | | | |
+| **3. Avionics / FC (Mateksys / GNSS)** | | DShot Control | **[AVIONICS]** | PWM Signals | CRSF Telemetry | UART3 MAVLink | |
+| **4. Actuation (TowerPro Servos)** | | | | **[ACTUATION]** | | | |
+| **5. RF Uplink (RadioMaster RP3 Rx)** | | | CRSF Packets | | **[UPLINK]** | | |
+| **6. Edge Compute (Pi Zero / RunCam)**| | | | | | **[EDGE COMPUTE]**| 5.8GHz WFB-ng |
+| **7. GCS Laptop (Laptop / NetCard)**  | | | | | | | **[GROUND STATION]**|
 
