@@ -68,6 +68,9 @@ KPPs represent the critical capabilities that the system must achieve to fulfill
 | **KPP-01** | **Autonomous Waypoint Navigation** | 100% of cruise flight path must be executed via autopilot when the autonomous mode is selected. | Fully autonomous takeoff, waypoint navigation loop, and landing sequence. | Demonstrates robust closed-loop Guidance, Navigation, and Control (GNC) without pilot intervention. |
 | **KPP-02** | **Onboard Edge Detection** | Real-time computer vision inference must execute locally on the aircraft. | Automated detection parsing with target bounding-box generation embedded on edge logs. | Validates true edge compute processing independence from ground or cloud relay networks. |
 | **KPP-03** | **Fail-Safe Recovery Loop** | Autopilot must trigger an automated Return-to-Base (RTB) profile upon loss of RF signal. | Safe physical recovery of the aircraft within a 10-meter radius of the launch point. | Ensures high-reliability flight safety and compliance with airspace operational standards. |
+| **KPP-04** |
+To fulfill post-flight analytical review mandates, the Ground Control Station laptop must automatically push processed computer vision bounding-box data logs and telemetry coordinates to a centralized cloud storage gateway via local cellular/Wi-Fi network backhaul within 30 minutes of flight termination.
+
 
 ### Key System Attributes (KSAs)
 KSAs are critical performance attributes used to optimize the aircraft's architecture. These values represent highly desirable targets that can be traded off to balance cost, weight, or complexity constraints.
@@ -165,6 +168,14 @@ This section defines the hardware protocols, chip architectures, and interface s
 *   **RST (Reset Pad):** A physical surface-mount pin breakout on the Matek PCB. Bridging this pad directly to Ground (GND) for ≥100 ms wipes volatile tracking memory and triggers a cold start to clear processing faults.
 *   **SBAS (Satellite-Based Augmentation System):** A regional network of geostationary satellites (such as WAAS in North America) providing differential corrections to boost spatial calculation precision.
 *   **UBX (u-blox Binary Protocol):** A high-density, low-overhead proprietary binary message stream developed by u-blox. Configuring iNav to consume the UBX protocol at 5Hz significantly reduces serialization lag compared to standard text-based NMEA lines.
+
+
+## 5. Design Derivation and Evolution Logs
+
+### 5.1 Deletion of Mechanical Landing Gear (Wheels)
+* **Date of Decision:** 2026-06-25
+* **Technical Justification:** The initial design concept included a tricycle wheeled landing gear array. During structural optimization passes, paper-backed foam board was determined to possess insufficient localized shear strength to withstand landing strut impact loads without internal plywood reinforcement spars, which would add unacceptable weight penalties. 
+* **Action:** Wheels have been omitted from the BOM. The airframe will utilize a high-durability reinforced packing-tape underbelly skin layer to facilitate manual hand-launches and grass belly-landings, saving 120g of dead-weight to maximize battery endurance margins.
 
 ---
 

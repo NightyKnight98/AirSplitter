@@ -16,6 +16,7 @@ This document establishes the hardware inventory, subsystem boundaries, and elec
 | **Avionics** | Mateksys Flight Controller F405-WING-V2 | 1 | STM32F405 MCU, ICM42688-P IMU, DPS310 Baro |
 | **Avionics** | Matek M10Q-5883 GNSS & Compass | 1 | u-blox M10 engine, QMC5883L Magnetometer via I2C |
 | **Avionics** | Matek Digital Airspeed Sensor AS-DLVR-I2C | 1 | DLVR-L10D, I2C interface, AS-DLVR-I2C with CAN Node L431 |
+| **Avionics** | Holybro / DroneCan Remote ID Module | 1 | Broadcasts mandatory FAA RID telemetry strings via CAN bus |
 | **Actuators** | TowerPro MG92B Servos | 4 | Digital, Metal Gear, High Torque |
 | **Actuators** | 3-pin Servo Extension Wire Cables | — | Signal and power distribution extension lines |
 | **Uplink** | RadioMaster RP3 ELRS FPV Receiver | 1 | 2.4GHz ExpressLRS Nano Receiver, Dual Antenna |

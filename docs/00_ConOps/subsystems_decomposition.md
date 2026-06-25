@@ -2,6 +2,19 @@
 
 The AirSplitter Unmanned Aircraft System (UAS) is broken down into seven distinct functional subsystems, mapping physical hardware nodes to explicit technical domains:
 
+## System Architecture and System Boundaries
+
+### 1. System Boundary Statement
+The AirSplitter Project is architecturally bifurcated into two distinct segments, establishing a strict physical and wireless system boundary:
+
+1. **Airborne Segment (The Aircraft):** Consists of all subsystems physically located on the airframe. This includes Propulsion, Power, Avionics/FC, Actuation, Structures, the airborne node of RF Communications (RP3 Rx), and the airborne node of Edge Computing (Pi Zero 2 W and RunCam VTX unit).
+2. **Ground Segment (Ground Control Station):** Consists of all infrastructure located on the ground. This includes the RadioMaster TX16S MK3 Radio Controller, the RTL8812AU USB Laptop Network Card, and the GCS Laptop.
+
+#### 1.1 Correction of Subsystem Scoping
+* **Subsystem 1.5 (Edge Computing & Video):** Scopped *strictly* to the airborne components (Raspberry Pi Zero 2 W and the RunCam VTX module). 
+* **Subsystem 1.8 (Ground Control Station):** A newly established 8th subsystem to house the GCS Laptop, the RTL8812AU Network Card, and the TX16S Radio Controller, ensuring the laptop is no longer orphaned.
+
+
 ## 1. Subsystem Breakdown Structure (SBS)
 
 ### 1.1 Propulsion Subsystem
@@ -79,13 +92,15 @@ graph TD
 ## N-Squared Interface Matrix
 
 
-| Rows (Outputs) \ Columns (Inputs) | 1. Power Bus | 2. Propulsion | 3. Avionics / FC | 4. Actuation | 5. RF Uplink | 6. Edge Compute | 7. GCS Laptop |
+
+| Rows (Outputs) \ Columns (Inputs) | 1. Power Bus | 2. Propulsion | 3. Avionics / FC | 4. Actuation | 5. RF Uplink (Rx) | 6. Edge Compute (Air) | 8. Ground Station (GCS) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1. Power Bus (Zeee LiPo / Switch)** | **[POWER]** | | VCC Power Pass | 8A Vx Servo BEC | | 5V 2A Rail | |
-| **2. Propulsion (ESC / Motor / Prop)**| | **[PROPULSION]**| ESC DShot Telem | Mechanical Load | | | |
-| **3. Avionics / FC (Mateksys / GNSS)** | | DShot Control | **[AVIONICS]** | PWM Signals | CRSF Telemetry | UART3 MAVLink | |
-| **4. Actuation (TowerPro Servos)** | | | | **[ACTUATION]** | | | |
-| **5. RF Uplink (RadioMaster RP3 Rx)** | | | CRSF Packets | | **[UPLINK]** | | |
-| **6. Edge Compute (Pi Zero / RunCam)**| | | | | | **[EDGE COMPUTE]**| 5.8GHz WFB-ng |
-| **7. GCS Laptop (Laptop / NetCard)**  | | | | | | | **[GROUND STATION]**|
+| **1. Power Bus (LiPo / Switch)** | **[POWER]** | | VCC Power Pass | 8A Vx Servo BEC | | 5V 2A Rail | |
+| **2. Propulsion (ESC/Motor/Prop)**| | **[PROPULSION]**| ESC DShot Telem | Mechanical Load | | | |
+| **3. Avionics / FC (Matek/GNSS)** | | DShot Control | **[AVIONICS]** | PWM Signals | CRSF Telemetry | UART3 MAVLink | |
+| **4. Actuation (Servos)**          | | | | **[ACTUATION]** | | | |
+| **5. RF Uplink (RP3 Rx Node)**    | | | CRSF Packets | | **[RF UPLINK]** | | |
+| **6. Edge Compute (Pi/VTX Node)**  | | | | | | **[EDGE COMPUTE]**| 5.8GHz WFB-ng Stream |
+| **8. Ground Station (GCS Segment)**| | | | | USB RC Control | | **[GROUND STATION]**|
+
 
