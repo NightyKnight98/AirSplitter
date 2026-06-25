@@ -4,21 +4,33 @@
 The AirSplitter Unmanned Aircraft System (UAS) operates strictly under the legal boundaries defined by the Federal Aviation Administration (FAA). Because this asset performs autonomous object detection and custom payload routing development, it complies with the following explicit frameworks:
 
 ### 1.1 Primary Framework: FAA Part 107 (Commercial/Research)
-*   **Operating Authority:** Conducted under FAA Advisory Circular (AC) 107-2A. 
+*   **Operating Authority:** Conducted under FAA Advisory Circular (AC) 107-2A guidelines.
 *   **Airspace Restriction:** Restricted entirely to **Class G (Uncontrolled) Airspace** up to the baseline structural ceiling. Operations within Class B, C, D, or E surface areas require explicit LAANC (Low Altitude Authorization and Notification Capability) digital clearance prior to battery initialization.
-*   **Visual Line of Sight (VLOS):** All flights must maintain un-aided VLOS with a designated Visual Observer (VO) assisting the Remote Pilot in Command (RPIC). The 0.75-mile downlink range limit is the absolute theoretical boundary; physical flight paths will truncate if atmospheric haze degrades direct visual monitoring (107-A.4.1).
+*   **Visual Line of Sight (VLOS):** Per 14 CFR § 107.31(a), the Remote Pilot in Command (RPIC) must maintain continuous, un-aided visual line of sight with the aircraft to monitor its flight path, altitude, and spot real-world traffic hazards. Per § 107.33, a Visual Observer (VO) is optional; a VO may be deployed as a strategic tool to maintain asset awareness if the RPIC briefly diverts attention to the Ground Control Station screen, but a VO does not clear the RPIC of structural VLOS compliance. 
 
 ### 1.2 Registration & Identification
 *   **FAA Digital Registration:** The airframe must display its unique FAA registration number externally via permanent marker or engraving.
-*   **Remote ID (RID) Compliance:** Because the takeoff weight exceeds 250 grams (0.55 lbs), the aircraft must transmit active Remote ID telemetry broadcast signals via an onboard broadcast module or a firmware-integrated flight controller broadcast bus.
+*   **Remote ID (RID) Compliance:** Because the takeoff weight exceeds 250 grams (0.55 lbs), the aircraft must transmit active Remote ID telemetry broadcast signals via the onboard Holybro DroneCan Remote ID module mapped to the avionics suite.
 
 ---
 
-## 2. Preliminary Environmental Operating Envelope
+## 2. Preliminary Environmental Operating Envelope & System Boundaries
 
-*   **Altitude Limits:** Maximum **400 feet AGL (Above Ground Level)** per FAA § 107.51, with local operational flight testing targets set to a conservative 150–250 feet AGL to maximize the Sony IMX415 Image Sensor downward pixel density for object detection.
-*   **Airspace Environment:** Class G Uncontrolled. Zero operations permitted over unprotected human assemblies or moving vehicles (§ 107.39).
-*   **Geographic Obstructions:** Dense rural tree canopies. Flight paths must maintain a minimum 50-foot vertical clearance buffer above the highest documented treeline canopy to mitigate localized mechanical wind shear and signal degradation.
+### 2.1 Altitude Limits
+Maximum **400 feet AGL (Above Ground Level)** per FAA § 107.51, with local operational flight testing targets set to a conservative 150–250 feet AGL to maximize the Sony IMX415 Image Sensor downward pixel density for object detection. Operations over unprotected human assemblies or moving vehicles are strictly prohibited under § 107.39 boundaries.
+
+### 2.2 Range Specification and Binding System Constraint Analysis
+The horizontal operating radius of the AirSplitter project is capped at an absolute threshold of **0.75 miles (1.2 km)** from the ground pilot station. While multiple subsystems impact range, this limit is governed strictly by human biology rather than electronic radio failure:
+
+*   **2.4GHz ExpressLRS Control Uplink:** Up to 5.0+ Miles (8.0+ km) link availability.
+*   **5.8GHz OpenIPC Video Downlink:** Up to 1.5 - 2.0 Miles (2.4 - 3.2 km) link availability via ground patch antenna tracking.
+*   **BINDING LIMIT: Human Visual VLOS Threshold:** 0.75 Miles (1.2 km) operational cutoff.
+
+1.  **Governing Boundary (Human Visual Acuity):** Human visual line-of-sight tracking for a 3-foot wingspan foam airframe degrades completely at a 0.75-mile (1.2 km) radius. Atmospheric haze or low contrast will truncate this flight boundary further. 
+2.  **Uplink Link Margin (2.4GHz ExpressLRS):** Operating with a 250mW packet profile, the RadioMaster RP3 receiver maintains a safe Link Margin up to 5.0+ miles (8.0+ km), meaning the control link is never a limiting factor.
+3.  **Downlink Link Margin (5.8GHz OpenIPC):** Utilizing the RunCam WiFiLink2-G VTX broadcasting through high-gain directional ground patch antennas, the video data network can close its link up to 1.5 to 2.0 miles (2.4 to 3.2 km). 
+
+*Conclusion:* The 0.75-mile (1.2 km) boundary is a **Regulatory and Visual restriction** under 14 CFR § 107.31, leaving both the control and video communication arrays with massive safety link margins during open-field sorties.
 
 ---
 
@@ -37,10 +49,11 @@ Testing will be restricted to a designated **unpopulated rural open field / priv
 
 ### 3.3 Radio Frequency (RF) Environment & Interference Matrix
 The system utilizes a dual-link radio topology (2.4GHz for control link, 5.8GHz for OpenIPC video data stream). The operating site RF characteristics are defined below:
-*   **Control Link (2.4GHz ExpressLRS / ELRS):** Operating with a minimum 250mW transmission packet output power profile, the ELRS link provides a theoretical line-of-sight range exceeding 5 miles, far eclipsing the 0.75-mile mission limit. 
 *   **Interference Mitigation:** 
     *   *Co-site Interference:* The 2.4GHz RC control receiver antennas must be physically separated from the 5.8GHz OpenIPC transmitter antennas inside the fuselage by at least 8 inches to prevent the high-power video signal from drowning out (RF desensing) the control link.
     *   *Environmental Interference:* Testing sites must be chosen away from industrial 2.4GHz/5.8GHz commercial Wi-Fi routers, high-voltage overland power lines, and cellular repeating towers to maintain a clean RF noise floor.
+
+---
 
 ## 4. LiPo Battery Thermodynamic Operating Limits & Endurance Planning
 
@@ -52,6 +65,7 @@ The AirSplitter propulsion and edge-computing arrays are powered by a central Li
 
 ### 4.2 Pre-Flight Mitigations
 For ambient operations below 55°F, batteries must be stored inside insulated, heated transport containers prior to airframe insertion. Launching with a cold-soaked battery pack is a strict flight safety violation.
+
 
 ---
 ## Operational Environment Diagram
