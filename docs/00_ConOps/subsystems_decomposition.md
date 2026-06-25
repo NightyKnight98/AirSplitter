@@ -89,9 +89,11 @@ graph TD
 
 ```
 
-## N-Squared Interface Matrix
+# Systems Architecture: Interface N2 Matrix & Data Routing
 
+## 1. Structural N2 Interface Matrix
 
+The matrix below maps structural outputs horizontally (rows) and inputs vertically (columns). Diagonal intersections contain the baseline subsystem hardware nodes. Empty cells represent zero direct structural interface.
 
 | Rows (Outputs) \ Columns (Inputs) | 1. Power Bus | 2. Propulsion | 3. Avionics / FC | 4. Actuation | 5. RF Uplink (Rx) | 6. Edge Compute (Air) | 8. Ground Station (GCS) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -103,4 +105,36 @@ graph TD
 | **6. Edge Compute (Pi/VTX Node)**  | | | | | | **[EDGE COMPUTE]**| 5.8GHz WFB-ng Stream |
 | **8. Ground Station (GCS Segment)**| | | | | USB RC Control | | **[GROUND STATION]**|
 
+---
 
+## 2. Comprehensive Interface Data & Power Tables
+
+Every intersection point on the matrix corresponds to a physical port pinout, wiring bus connection, or physical link on the aircraft.
+
+### 2.1 Power Subsystem Interfaces
+*   **Interface ID-01 (Battery to Power Switch):** Deans T-Connector to XT60 Adapter $\rightarrow$ Carries 11.1V raw DC current up to 60A surge.
+*   **Interface ID-02 (Power Switch to Matek FC):** 12AWG Ultra-Flexible Silicone Wire Pigtail $\rightarrow$ Passes total system current to main distribution node.
+*   **Interface ID-03 (FC to Cobra ESC Pass-Through):** VCC Battery Pass-Through Pads $\rightarrow$ Routes un-regulated LiPo voltage directly to the speed controller.
+
+### 2.2 Propulsion & Drivetrain Interfaces (Missing Links Restored)
+*   **Interface ID-04 (Cobra ESC to Cobra Motor):** 3-Phase AC Power Output Bullet Connectors $\rightarrow$ Delivers timed, high-current AC voltage to drive the brushless stator fields.
+*   **Interface ID-05 (Cobra Motor to APC Propeller):** Direct Mechanical Collet Prop Adapter $\rightarrow$ Transfers rotative kinetic shaft torque directly to the 7x5 pusher blade.
+*   **Interface ID-06 (Cobra ESC to Matek FC):** Telemetry Pad Wire $\rightarrow$ Feeds real-world ESC internal temperature, voltage, and motor RPM back to the flight logs via the DShot protocol.
+
+### 2.3 Flight Controller (FC) Data & Voltage Rails
+*   **Interface ID-07 (FC to Raspberry Pi Zero 2 W):** 5V Pad & GND Pad $\rightarrow$ Delivers a continuous, filtered 5V (2A maximum) rail to protect the Pi processor from motor induction brownouts.
+*   **Interface ID-08 (FC to RunCam VTX):** 9V/12V Switchable BEC Pad $\rightarrow$ Delivers high-current filtered power isolated from the main logic bus.
+*   **Interface ID-09 (FC to RunCam VTX Data Bus):** UART1 (TX1/RX1) $\rightarrow$ Transmits continuous bidirectional MAVLink packets to inject On-Screen Display (OSD) parameters onto the live video frame.
+*   **Interface ID-10 (FC to Raspberry Pi Zero 2 W Data Bus):** UART3 (TX3/RX3) $\rightarrow$ Pipes continuous MAVLink high-speed telemetry strings straight to the Pi for real-time computer vision geotagging and coordinate logging.
+*   **Interface ID-11 (FC to Matek M10Q GNSS):** I2C Bus (SCL/SDA) + UART2 (TX2/RX2) $\rightarrow$ Inputs compass magnetics data and raw GPS NMEA string coordinate streams at 10Hz updates.
+*   **Interface ID-12 (FC to Matek Airspeed Sensor):** Shared I2C Bus $\rightarrow$ Ingests differential pressure metrics from the AS-DLVR digital sensor node.
+
+### 2.4 Radio Frequency Control & Uplink Links (Missing Link Restored)
+*   **Interface ID-13 (RadioMaster RP3 Rx to Matek FC):** 4-Pin Serial Lead Array $\rightarrow$ Feeds high-speed bidirectional control parameters and flight link statistics via the **CRSF (Crossfire) protocol**.
+*   **Interface ID-14 (GCS Laptop to TX16S Radio Transmitter):** USB-C Data Cable $\rightarrow$ Maps ground control station waypoints and flight configuration command overwrites to the uplink module.
+
+### 2.5 Edge Computing & RF Video Downlink
+*   **Interface ID-15 (RunCam Camera to RunCam VTX Internal):** Proprietary digital ribbon cable $\rightarrow$ Streams raw uncompressed HD frames to the internal processing board.
+*   **Interface ID-16 (RunCam VTX to Pi Zero 2 W):** Micro-USB to 4-pin Data Bridge Cable $\rightarrow$ Creates an airborne local IP network connection over an internal hardware data bus to route processing streams into local Python OpenCV pipelines.
+*   **Interface ID-17 (RunCam VTX to Ground Network Card):** 5.8GHz Wireless Radio Frequency $\rightarrow$ Broadcasts high-power WFB-ng optimized network packets over the air up to the 0.75-mile open field test range limit.
+*   **Interface ID-18 (RTL8812AU Network Card to GCS Laptop):** Native USB-A / USB-C Port $\rightarrow$ Passes incoming digital streaming frames straight into laptop memory as a standard UVC webcam instance (`/dev/video0`).

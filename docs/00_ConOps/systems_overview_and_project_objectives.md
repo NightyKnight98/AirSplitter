@@ -32,11 +32,11 @@ The Mateksys F405-WING-V2 functions as the centralized power filtering and regul
 *   **RunCam WiFiLink2-G Ecosystem:** Employs an integrated high-definition Sony camera sensor. Raw video is piped via a MIPI CSI ribbon into the Raspberry Pi Zero 2 W, which executes local OpenCV/YOLO object detection inference before outputting the transcoded stream over the 5.8GHz WFB-ng network link.
 
 
-*   **Verification Method:** Ground-bench throttle step-response testing and iNav battery telemetry logs.
+*   **Verification Method:** Ground-bench throttle step-response testing and ArduPilot battery telemetry logs.
 
 1. Guidance, Navigation, and Control (GNC)
 *   **Objectice:** Program the Mateksys F405-WING-V2 firmware to maintain autonomous waypoint cruise navigation tracks within a maximum spatial cross-track error radius of ≤ 3.0 meters under steady-state ambient wind conditions up to 10 knots.
-*   **Verification Method:** Analysis of post-flight iNav blackbox telemetry flight path tracks.
+*   **Verification Method:** Analysis of post-flight ArduPilot blackbox telemetry flight path tracks.
 
 1. RF Telemetry & Link Reliability
 *   **Objective:** Maintain an uninterrupted 2.4GHz ExpressLRS control link margin with a Received Signal Strength Indicator (RSSI) of ≥ -100 dBm and a packet rate of 100Hz at a maximum operational line-of-sight (LOS) radius of 0.75 miles (0.8 km) from the RadioMaster TX16S.
@@ -51,8 +51,8 @@ The Mateksys F405-WING-V2 functions as the centralized power filtering and regul
 | Stakeholder Role | Primary Responsibility | Core System Interaction |
 | :--- | :--- | :--- |
 | **Systems Engineering (SE) Lead** | System lifecycle management, requirements verification, and interface control documentation. | Audits configuration changes, manages the Git/GitHub pipeline, and signs off on pre-flight verification readiness. |
-| **Pilot-in-Command (PIC)** | Safe tactical execution of the flight profile, manual override authority, and airspace safety compliance. | Operates the **RadioMaster TX16S**, monitors low-level iNav GNC telemetry, and executes manual takeoff and recovery loops. |
-| **Payload & Software Engineer** | Edge-compute pipeline performance, algorithm deployment, and localized network communication. | Manages the **Raspberry Pi Zero 2 W** OS, configures the computer vision models, and verifies the serial UART data stream. |
+| **Pilot-in-Command (PIC)** | Safe tactical execution of the flight profile, manual override authority, and airspace safety compliance. | Operates the **RadioMaster TX16S**, monitors low-level ArduPilot GNC telemetry, and executes manual takeoff and recovery loops. |
+| **Edge-Computing Engineer** | Edge-compute pipeline performance, algorithm deployment, and localized network communication. | Manages the **Raspberry Pi Zero 2 W** OS, configures the computer vision models, and verifies the serial UART data stream. |
 | **Regulatory Authority (FAA / Local)** | Airspace safety compliance, operational limitations verification, and remote identification enforcement. | Enforces **FAA Part 107** regulatory boundaries (e.g., maintaining flight under 400 ft AGL and inside visual line-of-sight). |
 | **Technical Reviewer / Recruiter** | Evaluation of engineering discipline, systems-level documentation rigor, and software architecture scaling. | Audits the repository file hierarchy, analyzes Blackbox flight data logs, and reviews the Kanban project lifecycle tracking. |
 
@@ -112,7 +112,7 @@ This section defines acronyms specific to the physical propulsion, power, and co
 *   **ADC (Analog-to-Digital Converter):** Integrated circuitry on the Mateksys F405-WING-V2 that translates raw physical voltages (battery cell metrics or RSSI) into digital data lines.
 *   *   **BEC (Battery Elimination Circuit):** A dedicated DC-to-DC step-down voltage regulator used to drop high raw battery voltages down to safe logic or servo operating thresholds. In the AirSplitter architecture, while the Cobra 60A ESC houses an internal 5.5V switching BEC, it is bypassed to maximize component isolation. Instead, the system relies entirely on the Mateksys F405-WING-V2 Flight Controller's internal 5V/6A Vx Servo BEC to cleanly power the actuation subsystem, alongside separate internal isolated step-down regulators to feed the 5V companion computer and the 9V/12V OpenIPC transmission arrays.
 
-*   **CLI (Command Line Interface):** The text-based input console inside the iNav firmware used to configure, dump, or restore system-level parameters.
+*   **CLI (Command Line Interface):** The text-based input console inside the ArduPilot firmware used to configure, dump, or restore system-level parameters.
 *   **ELRS (ExpressLRS):** An open-source, high-performance, ultra-low-latency 2.4GHz radio control link protocol utilized by the RadioMaster RP3 receiver and TX16S transmitter.
 *   **ESC (Electronic Speed Controller):** The high-current power modulation unit (Cobra 60A) that interprets PWM throttle signals from the flight controller and delivers alternating three-phase current to spin the brushless motor.
 *   **FC (Flight Controller):** The localized processing core (Mateksys F405-WING-V2) containing an array of sensors to compute and execute flight control loops.
@@ -167,7 +167,7 @@ This section defines the hardware protocols, chip architectures, and interface s
 *   **QZSS (Quasi-Zenith Satellite System):** A regional satellite-based augmentation system operated by Japan, tracked natively by the u-blox core to enhance positioning stability.
 *   **RST (Reset Pad):** A physical surface-mount pin breakout on the Matek PCB. Bridging this pad directly to Ground (GND) for ≥100 ms wipes volatile tracking memory and triggers a cold start to clear processing faults.
 *   **SBAS (Satellite-Based Augmentation System):** A regional network of geostationary satellites (such as WAAS in North America) providing differential corrections to boost spatial calculation precision.
-*   **UBX (u-blox Binary Protocol):** A high-density, low-overhead proprietary binary message stream developed by u-blox. Configuring iNav to consume the UBX protocol at 5Hz significantly reduces serialization lag compared to standard text-based NMEA lines.
+*   **UBX (u-blox Binary Protocol):** A high-density, low-overhead proprietary binary message stream developed by u-blox. Configuring ArduPilot to consume the UBX protocol at 5Hz significantly reduces serialization lag compared to standard text-based NMEA lines.
 
 
 ## 5. Design Derivation and Evolution Logs
