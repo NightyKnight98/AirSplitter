@@ -68,4 +68,57 @@ OpenIPC_VTX <-->|USB High-Speed Data Bridge| Pi_Zero
 OpenIPC_VTX -.->|5.8GHz Wireless Video/Telemetry Data| Laptop_NetCard[RTL8812AU USB Laptop Network Card]
 Laptop_NetCard -->|Native USB Bus Port| GCS_Laptop[Ground Control Station Laptop]
 ```
+## 2. Power Architecture Routing and Trace Map
+Power flows from your chemical storage block through a series of hardware voltage-step-down transitions managed by the flight controller to deliver isolated, clean current loops to your electronics:
+
+                  +-----------------------------------+
+
+                  | Zeee 3S 3200mAh LiPo Battery Pack |
+                  +-----------------+-----------------+
+                                    |
+                                    v [11.1V Nominal DC]
+                  +-----------------+-----------------+
+
+                  | XT60 Mechanical Current On/Off SW |
+                  +-----------------+-----------------+
+                                    |
+                                    v [11.1V Main Bus Line]
+                  +-----------------+-----------------+
+
+                  | Mateksys F405-WING-V2 Flight Controller Hub |
+                  +--------+-----------+-----------+--------+
+
+                           |           |           |
+     [Pass-Through VCC]    |           |           | [Internal 5V 2A Regulator]
+                           v           |           v
++----------------------------+         |     +-------------------------+
+
+| Cobra 60A ESC & Motor      |         |     | Raspberry Pi Zero 2 W   |
++----------------------------+         |     | RadioMaster RP3 ELRS Rx |
+                                       |     +-------------------------+
+            [Internal Vx 8A BEC Rail]  v
+         +-------------------------------+
+
+         | TowerPro MG92B Servos (x4)    |
+         +-------------------------------+
+
+## 3. Comprehensive System Power Budget Table
+
+The matrix below quantifies your electrical boundaries at a nominal voltage of 11.1V (3S LiPo architecture). These values account for full-load execution loops—such as the Raspberry Pi running localized, multi-threaded CNN inferences alongside maximum simultaneous servo flight-surface corrections.
+
+| Component / Subsystem Node | Operating Voltage (V) | Estimated Current (Idle) | Estimated Current (Peak) | Power Consumption (Max) | Engineering Margin / Rail Compliance |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Cobra C-2814/8 Brushless Motor** | 11.1V (Direct) | 1.20 A | 45.00 A | 499.50 W | Supplied via VCC Pass-Through Pads. |
+| **Mateksys F405-WING-V2 Logic** | 5.0V (Internal) | 0.15 A | 0.25 A | 1.25 W | Internal step-down logic bus. |
+| **Raspberry Pi Zero 2 W Payload** | 5.0V (Regulated) | 0.20 A | 0.70 A | 3.50 W | Max CPU loading on FC 5V/2A rail. |
+| **TowerPro MG92B Servos (x4 Total)**| 5.0V (Regulated) | 0.04 A | 3.20 A | 16.00 W | Driven entirely by the FC Vx 8A BEC rail. |
+| **RadioMaster RP3 ELRS Receiver** | 5.0V (Regulated) | 0.05 A | 0.10 A | 0.50 W | Powered via the FC 5V/2A rail. |
+| **RunCam WiFiLink2-G VTX Module** | 11.1V (Regulated) | 0.45 A | 0.72 A | 8.00 W | Powered via the FC 9V/12V 2A rail. |
+| **Matek M10Q-5883 GNSS / Compass**| 5.0V (Regulated) | 0.05 A | 0.08 A | 0.40 W | Powered via the FC 5V/2A rail. |
+| **TOTAL SYSTEM CONSUMPTION** | **—** | **2.14 A** | **50.15 A** | **529.15 W** | **Headroom satisfies current loads.** |
+
+### 3.1 Flight Controller Internal Rail Verification:
+*   **Total 5V/2A Regulator Load (Pi + Rx + GPS):** Peak draw is **0.88 Amps**. This fits within the Mateksys 5V **2.0 Amp current limit**, providing a safe **56% buffer**.
+*   **Total Vx Servo Rail Load (4x Servos):** Peak draw is **3.20 Amps**. This fits within the Mateksys Vx **8.0 Amp continuous current limit**, providing an exceptional **60% structural buffer**.
+*   **Total Vtt Video Rail Load (RunCam VTX):** Peak draw is **0.72 Amps**. This fits within the Mateksys 9V/12V **2.0 Amp current limit**, providing a **64% buffer**.
 
