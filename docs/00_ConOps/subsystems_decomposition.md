@@ -71,36 +71,36 @@ Laptop_NetCard -->|Native USB Bus Port| GCS_Laptop[Ground Control Station Laptop
 ## 2. Power Architecture Routing and Trace Map
 Power flows from your chemical storage block through a series of hardware voltage-step-down transitions managed by the flight controller to deliver isolated, clean current loops to your electronics:
 
-                  +-----------------------------------+
+```mermaid
+graph TD
+    %% Base Source Node
+    Battery[Zeee 3S 3200mAh LiPo Battery] -->|11.1V Nominal DC| Power_Switch[XT60 Mechanical Power Switch]
+    Power_Switch -->|11.1V Main Bus Line| Matek_FC[Mateksys F405-WING-V2 Flight Controller Hub]
 
-                  | Zeee 3S 3200mAh LiPo Battery Pack |
-                  +-----------------+-----------------+
-                                    |
-                                    v [11.1V Nominal DC]
-                  +-----------------+-----------------+
+    %% Pass Through Rail
+    Matek_FC -->|VCC Pass-Through Pads: 11.1V DC| Cobra_ESC[Cobra 60A FPV Wing ESC]
+    Cobra_ESC -->|3-Phase AC Current| Cobra_Motor[Cobra C-2814/8 Brushless Motor]
 
-                  | XT60 Mechanical Current On/Off SW |
-                  +-----------------+-----------------+
-                                    |
-                                    v [11.1V Main Bus Line]
-                  +-----------------+-----------------+
+    %% Internal FC Regulators Slicing Outputs
+    subgraph Matek Onboard Voltage Regulation
+        Vx_Reg[Vx Servo BEC: 5.5V 8A continuous]
+        V5_Reg[5V Logic Rail: 5.0V 2A continuous]
+        V12_Reg[Vtt Video Rail: 12.0V 2A continuous]
+    end
 
-                  | Mateksys F405-WING-V2 Flight Controller Hub |
-                  +--------+-----------+-----------+--------+
+    Matek_FC ---> Vx_Reg
+    Matek_FC ---> V5_Reg
+    Matek_FC ---> V12_Reg
 
-                           |           |           |
-     [Pass-Through VCC]    |           |           | [Internal 5V 2A Regulator]
-                           v           |           v
-+----------------------------+         |     +-------------------------+
+    %% Rail Distributions
+    Vx_Reg -->|Servo Power Plane| Servos[TowerPro MG92B Servos x4]
+    
+    V5_Reg -->|Filtered Logic Power Bus| Pi_Zero[Raspberry Pi Zero 2 W Companion Computer]
+    V5_Reg -->|Filtered Logic Power Bus| RP3_Rx[RadioMaster RP3 ELRS Receiver]
+    V5_Reg -->|Filtered Logic Power Bus| Matek_GPS[Matek M10Q GNSS Module]
 
-| Cobra 60A ESC & Motor      |         |     | Raspberry Pi Zero 2 W   |
-+----------------------------+         |     | RadioMaster RP3 ELRS Rx |
-                                       |     +-------------------------+
-            [Internal Vx 8A BEC Rail]  v
-         +-------------------------------+
-
-         | TowerPro MG92B Servos (x4)    |
-         +-------------------------------+
+    V12_Reg -->|Filtered Video Power Bus| OpenIPC_VTX[RunCam WiFiLink2-G VTX Module]
+```
 
 ## 3. Comprehensive System Power Budget Table
 
