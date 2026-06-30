@@ -13,8 +13,9 @@ The primary mission of the AirSplitter Unmanned Aerial Vehicle (AV-01) is to exe
 *   **Verification Method:** Caliper measurements and chord-line alignment matrix mapping against the baseline SolidWorks CAD model prior to final assembly.
 
 1. Avionics & Power Management
-*   **Objective:** Achieve a continuous safe operational flight endurance of ≥ 15 minutes utilizing the Zeee 3S 3200mAh LiPo battery, while ensuring the Cobra 60A ESC auxiliary 6A BEC maintains a stable 5.0V (± 0.1V) rail voltage to prevent power starvation on the flight controller and servos.
-*   **Verification Method:** Ground-bench throttle step-response testing and iNav battery telemetry logs.
+*   **Objective:** Achieve a continuous safe operational flight endurance of ≥ 15 minutes utilizing the Zeee 3S 3200mAh LiPo battery, while ensuring the Mateksys F405-WING-V2 internal regulators maintain isolated, stable power rails: an 8A Vx BEC rail for servos, a micro-filtered 5V 2A rail for the Raspberry Pi and receivers, and a filtered 9V/12V 2A rail for the OpenIPC VTX, preventing power starvation or component resets.
+*   **Verification Method:** Ground-bench throttle step-response testing and ArduPilot battery telemetry logs.
+
 
 1. Guidance, Navigation, and Control (GNC)
 *   **Objectice:** Program the Mateksys F405-WING-V2 firmware to maintain autonomous waypoint cruise navigation tracks within a maximum spatial cross-track error radius of ≤ 3.0 meters under steady-state ambient wind conditions up to 10 knots.
